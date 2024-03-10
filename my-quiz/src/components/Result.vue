@@ -16,20 +16,42 @@ import { useQuizStore } from '../stores/quiz'
 const quizStore = useQuizStore()
 
 const loading = ref(true)
-const correctAnswers = ref(0)
 
-const results = computed(() => quizStore.results || [])
+const correctAnswers = computed(() => {
+  const { username, ...answers } = quizStore.results
 
-// I need to display the correct number of answers once the results are available
-watch(results, (newResults, oldResults) => {
+  return Object.keys(answers).reduce((acc, questionId) => {
+    const question = quizStore.questions.find((q) => q.id === questionId)
+    if (!question) return acc
+
+    const correctAnswer = question.options[question.answer]
+    const userAnswer = answers[questionId]
+
+    return correctAnswer === userAnswer ? acc + 1 : acc
+  }, 0)
+})
+
+function reset () {
+  quizStore.reset()
+}
+
+watch(correctAnswers, (newResults, oldResults) => {
   if (newResults !== oldResults) {
-    debugger
+    // debugger
     loading.value = false
-    console.log('newResults:', newResults.value)
-    correctAnswers.value = newResults.value.reduce((acc, answer) => {
-      const question = quizStore.questions.value.find((q) => q.id === answer.name)
-      return question.options[question.answer] === answer.value ? acc + 1 : acc
-    }, 0)
+    console.log('newResults:', JSON.stringify(JSON.parse(newResults)))
+
+    quizStore.setSurveySetting('completedHtml', `
+      <h4>You got <b>${correctAnswers}</b> out of <b>${quizStore.results.length}</b> correct answers.</h4>
+    `)
+
+    quizStore.setSurveySetting('completedHtmlOnCondition', [{
+        expression: `${correctAnswers} == 0`,
+        html: "<h4>Unfortunately, none of your answers are correct. Please try again.</h4>"
+    }, {
+        expression: `${correctAnswers} == ${quizStore.results.length}`,
+        html: "<h4>Congratulations! You answered all the questions correctly!</h4>"
+    }])
   }
 }, { deep: true, immediate: true })
 </script>
