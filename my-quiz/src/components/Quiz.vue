@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>Quiz</h1>
     <div v-if="loading">Loading...</div>
     <div v-else id="surveyElement">
       <SurveyComponent :model="survey" />
@@ -12,20 +11,22 @@
 import { ref, onMounted, watch } from 'vue'
 import 'survey-core/defaultV2.min.css'
 import { Model } from 'survey-core'
+import { ContrastDarkPanelless } from 'survey-core/themes/contrast-dark-panelless'
 import { useQuizStore } from '../stores/quiz'
 
 const survey = ref(null)
 const loading = ref(true)
-
-// survey.onComplete.add(surveyComplete)
+const quizStore = useQuizStore()
 
 watch(survey, (newValue) => {
   if (newValue) {
     console.log('Survey complete:', newValue)
     newValue.onComplete.add((result) => {
       console.log('Survey onComplete:', result.data)
-      const quizStore = useQuizStore()
-      quizStore.setResults(result.data)
+      quizStore.setSurvey(newValue)
+
+      const data = Array.isArray(result.data) ? result.data : [result.data]
+      quizStore.setResults(data)
     })
   }
 }, { immediate: true })
@@ -36,6 +37,10 @@ const fetchQuestions = async () => {
     const questions = await response.json()
     const surveyJson = convertQuestionsToSurveyJSFormat(questions)
     survey.value = new Model(surveyJson)
+    survey.value.startTimerOnFirstPage = false
+    survey.value.showTimerPanel = 'top'
+    survey.value.maxTimeToFinishPage = 10
+    survey.value.applyTheme(ContrastDarkPanelless)
   } catch (err) {
     console.error('Failed to fetch questions:', err)
   } finally {
@@ -50,7 +55,7 @@ function convertQuestionsToSurveyJSFormat (questions) {
     pages: [{
       elements: [{
         type: "html",
-        html: "You are about to start a quiz on American history. <br>You will have 10 seconds for every question and 25 seconds to end the quiz.<br>Enter your name below and click <b>Start Quiz</b> to begin."
+        html: "You are about to start a quiz on American history. <br>You will have 10 seconds for every question.<br>Enter your name below and click <b>Start Quiz</b> to begin."
       }, {
         type: "text",
         name: "username",
@@ -62,7 +67,6 @@ function convertQuestionsToSurveyJSFormat (questions) {
         elements: [{
           type: 'radiogroup',
           name: question.id,
-          // name: `question${index + 1}`,
           title: question.text,
           choices: question.options,
           correctAnswer: question.options[question.answer]
@@ -72,5 +76,7 @@ function convertQuestionsToSurveyJSFormat (questions) {
   }
 }
 
-onMounted(fetchQuestions)
+onMounted(async () => {
+  await fetchQuestions()
+})
 </script>
