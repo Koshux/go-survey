@@ -1,38 +1,10 @@
-package main
+package store
 
 import (
-	"encoding/json"
-	"fmt"
-	"net/http"
+	"my-quiz-backend/models"
 )
 
-func main() {
-	http.HandleFunc("/questions", func(w http.ResponseWriter, r *http.Request) {
-		enableCors(&w)
-
-		if r.Method == "GET" {
-			getQuestions(w)
-		} else if r.Method == "POST" {
-			postAnswers(w, r)
-		}
-	})
-
-	fmt.Println("Server running on http://localhost:8080")
-	http.ListenAndServe(":8080", nil)
-}
-
-func enableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-}
-
-type Question struct {
-	ID      string   `json:"id"`
-	Text    string   `json:"text"`
-	Options []string `json:"options"`
-	Answer  int      `json:"answer"` // index of the correct option
-}
-
-var questions = []Question{
+var questions = []models.Question{
 	{
 		ID:      "1",
 		Text:    "What is the capital of France?",
@@ -95,14 +67,16 @@ var questions = []Question{
 	},
 }
 
-func getQuestions(w http.ResponseWriter) {
-	// Return the questions to the client
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(questions)
+var submittedAnswers []models.SubmittedAnswer
+
+func GetQuestions() []models.Question {
+	return questions
 }
 
-func postAnswers(w http.ResponseWriter, r *http.Request) {
-	// Process submitted answers and return the result
+func AddSubmittedAnswer(answer models.SubmittedAnswer) {
+	submittedAnswers = append(submittedAnswers, answer)
+}
 
+func GetSubmittedAnswers() []models.SubmittedAnswer {
+	return submittedAnswers
 }
