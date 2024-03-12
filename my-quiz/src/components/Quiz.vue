@@ -1,8 +1,8 @@
 <template>
   <div>
     <div v-if="loading">Loading...</div>
-    <div v-else-if="quizStore.survey">
-      <SurveyComponent :model="quizStore.survey" />
+    <div v-else>
+      <SurveyComponent :model="survey" />
     </div>
   </div>
 </template>
@@ -10,18 +10,21 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import 'survey-core/defaultV2.min.css'
-import { useQuizStore } from '../stores/quiz'
+import { Model } from 'survey-core'
+import { ContrastDarkPanelless } from 'survey-core/themes/contrast-dark-panelless'
+import { useQuizStore } from '@/stores/quiz'
 
-// const survey = ref(null)
+const survey = ref(null)
 const loading = ref(true)
 const quizStore = useQuizStore()
 
-watch(quizStore.survey, (newValue) => {
+watch(survey, (newValue) => {
   if (newValue) {
     console.log('Survey complete:', newValue)
     newValue.onComplete.add((result) => {
       console.log('Survey onComplete result:', result)
       console.log('Survey onComplete:', result.data)
+
       quizStore.setResults(result.data)
     })
   }
@@ -29,19 +32,9 @@ watch(quizStore.survey, (newValue) => {
 
 function convertQuestionsToSurveyJSFormat (questions) {
   return {
-    title: 'General Knwoledge Quiz',
+    title: 'General Knowledge Quiz',
     showProgressBar: 'bottom',
-    pages: [{
-      elements: [{
-        type: 'html',
-        html: 'You are about to start a quiz on American history. <br>You will have 10 seconds for every question.<br>Enter your name below and click <b>Start Quiz</b> to begin.'
-      }, {
-        type: 'text',
-        name: 'username',
-        titleLocation: 'hidden',
-        isRequired: true
-      }],
-    },
+    pages: [
       ...questions.map((question, index) => ({
         elements: [{
           type: 'radiogroup',
@@ -49,7 +42,7 @@ function convertQuestionsToSurveyJSFormat (questions) {
           title: question.text,
           choices: question.options,
           correctAnswer: question.options[question.answer],
-          requiredText: '!'
+          isRequired: true
         }]
       }))
     ],
@@ -63,7 +56,11 @@ onMounted(async () => {
     quizStore.setQuestions(questions)
 
     const surveyJson = convertQuestionsToSurveyJSFormat(questions)
-    quizStore.setSurvey(surveyJson)
+    survey.value = new Model(surveyJson)
+    survey.value.startTimerOnFirstPage = false
+    survey.value.showTimerPanel = 'top'
+    survey.value.maxTimeToFinishPage = 10
+    survey.value.applyTheme(ContrastDarkPanelless)
   } catch (err) {
     console.error('Failed to fetch questions:', err)
   } finally {

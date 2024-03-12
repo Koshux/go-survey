@@ -1,7 +1,9 @@
 <script setup>
-import Quiz from './components/Quiz.vue'
-import Result from './components/Result.vue'
-import { useQuizStore } from './stores/quiz'
+import { ref } from 'vue'
+import Quiz from '@/components/Quiz.vue'
+import Result from '@/components/Result.vue'
+import { useQuizStore } from '@/stores/quiz'
+
 const quizStore = useQuizStore()
 </script>
 

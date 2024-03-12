@@ -1,28 +1,35 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { Model } from 'survey-core'
-import { ContrastDarkPanelless } from 'survey-core/themes/contrast-dark-panelless'
 
 export const useQuizStore = defineStore('quiz', () => {
   const questions = ref([])
   const results = ref([])
   const survey = ref(null)
 
-  const completed = computed(() => {
-    return results.value != null && results.value.length > 0
+  const resultCount = computed(() => {
+    return results.value != null ? Object.keys(results.value).length : 0
   })
 
-  function setSurvey (data) {
-    survey.value = new Model(data)
-    survey.value.startTimerOnFirstPage = false
-    survey.value.showTimerPanel = 'top'
-    survey.value.maxTimeToFinishPage = 10
-    survey.value.applyTheme(ContrastDarkPanelless)
-  }
+  const completed = computed(() => {
+    return results.value != null && Object.keys(results.value).length > 0
+  })
 
-  function setSurveySetting(settingName, data) {
-    survey.value[settingName] = data
-  }
+  const correctAnswers = computed(() => {
+    const { username, ...answers } = results.value
+
+    return Object.keys(answers).reduce((acc, questionId) => {
+      if (!questions.value.length) return acc
+
+      const question = questions.value.find((q) => q.id === questionId)
+
+      if (!question) return acc
+
+      const correctAnswer = question.options[question.answer]
+      const userAnswer = answers[questionId]
+
+      return correctAnswer === userAnswer ? acc + 1 : acc
+    }, 0)
+  })
 
   function setResults (data) {
     results.value = data
@@ -38,13 +45,13 @@ export const useQuizStore = defineStore('quiz', () => {
 
   return {
     completed,
+    correctAnswers,
     questions,
     reset,
     results,
+    resultCount,
     survey,
     setQuestions,
     setResults,
-    setSurveySetting,
-    setSurvey
   }
 })
