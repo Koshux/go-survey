@@ -2,6 +2,9 @@ package store
 
 import (
 	"my-quiz-backend/models"
+	"sort"
+
+	"github.com/google/uuid"
 )
 
 var questions = []models.Question{
@@ -66,8 +69,44 @@ var questions = []models.Question{
 		Answer:  0, // George Orwell
 	},
 }
-
+var quizResults []models.QuizResult
 var submittedAnswers []models.SubmittedAnswer
+
+func CalculatePercentile(userID uuid.UUID) float64 {
+	var userScore int
+	var scores []int
+
+	for _, result := range quizResults {
+		scores = append(scores, result.Score)
+		if result.UserID == userID {
+			userScore = result.Score
+		}
+	}
+
+	sort.Ints(scores)
+
+	// Find the rank of the user's score
+	rank := float64(len(scores))
+	for i, score := range scores {
+		if score == userScore {
+			rank = float64(i)
+			break
+		}
+	}
+
+	percentile := (rank / float64(len(scores))) * 100
+	return percentile
+}
+
+func GetCorrectAnswer(questionID string) (string, bool) {
+	for _, q := range questions {
+		if q.ID == questionID {
+			return q.Options[q.Answer], true
+		}
+	}
+
+	return "", false
+}
 
 func GetQuestions() []models.Question {
 	return questions
@@ -79,4 +118,12 @@ func AddSubmittedAnswer(answer models.SubmittedAnswer) {
 
 func GetSubmittedAnswers() []models.SubmittedAnswer {
 	return submittedAnswers
+}
+
+func AddQuizResult(result models.QuizResult) {
+	quizResults = append(quizResults, result)
+}
+
+func GetQuizResults() []models.QuizResult {
+	return quizResults
 }

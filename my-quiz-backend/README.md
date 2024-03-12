@@ -19,7 +19,7 @@ Ensure you have Go installed on your system. You can download it from [the offic
 1. Navigate to the project directory.
 2. Run the server using the Go command:
    ```bash
-   go run main.go
+   go run cmd/main.go
    ```
 
 3. The server will start and listen on `http://localhost:8080`.
