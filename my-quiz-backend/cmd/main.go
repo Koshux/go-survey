@@ -5,6 +5,7 @@ import (
 	"my-quiz-backend/api/v1"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 )
 
@@ -16,9 +17,11 @@ func main() {
 	}
 
 	defer logger.Sync()
+	router := mux.NewRouter()
+	var quizApi = router.PathPrefix("/api").Subrouter()
 
-	api.SetupRoutes(logger)
+	api.SetupRoutes(logger, quizApi)
 
 	fmt.Println("Server running on http://localhost:8080")
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8080", router)
 }
