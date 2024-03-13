@@ -1,6 +1,7 @@
 package store
 
 import (
+	"fmt"
 	"my-quiz-backend/models"
 	"sort"
 
@@ -78,10 +79,12 @@ func CalculatePercentile(userID uuid.UUID) float64 {
 
 	for _, result := range quizResults {
 		scores = append(scores, result.Score)
+		fmt.Println(">> CalculatePercentile - result.Score:", result.Score)
 		if result.UserID == userID {
 			userScore = result.Score
 		}
 	}
+	fmt.Println(">> CalculatePercentile - userScore:", userScore)
 
 	sort.Ints(scores)
 
@@ -94,6 +97,9 @@ func CalculatePercentile(userID uuid.UUID) float64 {
 		}
 	}
 
+	fmt.Println(">> CalculatePercentile - Rank:", rank)
+	fmt.Println(">> CalculatePercentile - scores:", scores)
+	fmt.Println(">> CalculatePercentile - len(scores):", len(scores))
 	percentile := (rank / float64(len(scores))) * 100
 	return percentile
 }

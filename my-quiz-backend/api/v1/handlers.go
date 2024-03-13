@@ -23,8 +23,11 @@ func SetupRoutes(logger *zap.Logger) {
 	http.HandleFunc("/answers", func(w http.ResponseWriter, r *http.Request) {
 		enableCors(&w)
 
-		if r.Method == "POST" {
-			quiz.SubmitAnswers(w, r, logger)
+		switch r.Method {
+		case "GET":
+			quiz.GetQuizResults(w, logger)
+		case "POST":
+			quiz.SubmitQuizAnswers(w, r, logger)
 		}
 	})
 }

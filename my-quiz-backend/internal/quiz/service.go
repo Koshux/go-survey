@@ -17,10 +17,11 @@ func GetQuestions(w http.ResponseWriter, logger *zap.Logger) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(questions)
 
+	logger.Debug("Retrieve quiz questions", zap.Any("payload", questions))
 	logger.Info("Retrieve quiz questions", zap.String("status", "completed"))
 }
 
-func SubmitAnswers(w http.ResponseWriter, r *http.Request, logger *zap.Logger) {
+func SubmitQuizAnswers(w http.ResponseWriter, r *http.Request, logger *zap.Logger) {
 	logger.Info("Submitting answers", zap.String("status", "started"))
 
 	var submittedAnswer models.SubmittedAnswer
@@ -33,7 +34,7 @@ func SubmitAnswers(w http.ResponseWriter, r *http.Request, logger *zap.Logger) {
 	}
 
 	logSubmittedAnswer := zap.Any("logSubmittedAnswer", submittedAnswer)
-	logger.Info("Pending submitted answer", logSubmittedAnswer)
+	logger.Debug("Pending submitted answer", logSubmittedAnswer)
 
 	score := calculateScore(submittedAnswer)
 	store.AddQuizResult((models.QuizResult{
@@ -49,7 +50,19 @@ func SubmitAnswers(w http.ResponseWriter, r *http.Request, logger *zap.Logger) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 
+	logger.Debug("Submitted answers completed", zap.Any("payload", response))
 	logger.Info("Submitted answers completed", zap.String("status", "success"))
+}
+
+func GetQuizResults(w http.ResponseWriter, logger *zap.Logger) {
+	quizResults := store.GetQuizResults()
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(quizResults)
+
+	logger.Debug("Retrieve submitted answers", zap.Any("payload", quizResults))
+	logger.Info("Retrieve submitted answers", zap.String("status", "completed"))
 }
 
 func calculateScore(submittedAnswer models.SubmittedAnswer) int {
