@@ -19,6 +19,9 @@ func main() {
 	defer logger.Sync()
 	router := mux.NewRouter()
 	var quizApi = router.PathPrefix("/api").Subrouter()
+	quizApi.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNotFound)
+	})
 
 	api.SetupRoutes(logger, quizApi)
 

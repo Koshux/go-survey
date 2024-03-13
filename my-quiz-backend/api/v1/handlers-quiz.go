@@ -1,7 +1,7 @@
 package api
 
 import (
-	"my-quiz-backend/internal/quiz"
+	"my-quiz-backend/services/quiz"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -31,7 +31,7 @@ func enableCors(w *http.ResponseWriter) {
 func setupHandlers(logger *zap.Logger, api *mux.Router) {
 	api.NotFoundHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		enableCors(&w)
-		w.WriteHeader(http.StatusNotFound)
+		w.WriteHeader(http.StatusForbidden)
 	})
 
 	api.HandleFunc("/questions", func(w http.ResponseWriter, r *http.Request) {
