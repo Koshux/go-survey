@@ -12,10 +12,10 @@ var questions = []models.Question{
 	{
 		ID: "1",
 		Text: map[string]string{
-			"en": "What is the capital of France?",
-			"ge": "Was ist die Hauptstadt von Frankreich?",
-			"pt": "Qual é a capital da França?",
-			"sw": "Vad är huvudstaden i Frankrike?",
+			"default": "What is the capital of France?",
+			"de":      "Was ist die Hauptstadt von Frankreich?",
+			"pt":      "Qual é a capital da França?",
+			"sv":      "Vad är huvudstaden i Frankrike?",
 		},
 		Options: []string{"New York", "London", "Paris", "Tokyo"},
 		Answer:  2, // Paris
@@ -23,10 +23,10 @@ var questions = []models.Question{
 	{
 		ID: "2",
 		Text: map[string]string{
-			"en": "Which planet is known as the Red Planet?",
-			"ge": "Welcher Planet ist als der Rote Planet bekannt?",
-			"pt": "Qual planeta é conhecido como o Planeta Vermelho?",
-			"sw": "Vilken planet är känd som den röda planeten?",
+			"default": "Which planet is known as the Red Planet?",
+			"de":      "Welcher Planet ist als der Rote Planet bekannt?",
+			"pt":      "Qual planeta é conhecido como o Planeta Vermelho?",
+			"sv":      "Vilken planet är känd som den röda planeten?",
 		},
 		Options: []string{"Earth", "Mars", "Jupiter", "Saturn"},
 		Answer:  1, // Mars
@@ -34,10 +34,10 @@ var questions = []models.Question{
 	{
 		ID: "3",
 		Text: map[string]string{
-			"en": "What is the largest ocean on Earth?",
-			"ge": "Was ist der größte Ozean der Erde?",
-			"pt": "Qual é o maior oceano da Terra?",
-			"sw": "Vilken är den största oceanen på jorden?",
+			"default": "What is the largest ocean on Earth?",
+			"de":      "Was ist der größte Ozean der Erde?",
+			"pt":      "Qual é o maior oceano da Terra?",
+			"sv":      "Vilken är den största oceanen på jorden?",
 		},
 		Options: []string{"Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"},
 		Answer:  3, // Pacific Ocean
@@ -45,10 +45,10 @@ var questions = []models.Question{
 	{
 		ID: "4",
 		Text: map[string]string{
-			"en": "In which year did the Titanic sink?",
-			"ge": "In welchem Jahr sank die Titanic?",
-			"pt": "Em que ano o Titanic afundou?",
-			"sw": "Vilket år sjönk Titanic?",
+			"default": "In which year did the Titanic sink?",
+			"de":      "In welchem Jahr sank die Titanic?",
+			"pt":      "Em que ano o Titanic afundou?",
+			"sv":      "Vilket år sjönk Titanic?",
 		},
 		Options: []string{"1912", "1922", "1905", "1898"},
 		Answer:  0, // 1912
@@ -56,10 +56,10 @@ var questions = []models.Question{
 	{
 		ID: "5",
 		Text: map[string]string{
-			"en": "Who wrote 'Hamlet'?",
-			"ge": "Wer schrieb 'Hamlet'?",
-			"pt": "Quem escreveu 'Hamlet'?",
-			"sw": "Vem skrev 'Hamlet'?",
+			"default": "Who wrote 'Hamlet'?",
+			"de":      "Wer schrieb 'Hamlet'?",
+			"pt":      "Quem escreveu 'Hamlet'?",
+			"sv":      "Vem skrev 'Hamlet'?",
 		},
 		Options: []string{"Leo Tolstoy", "William Shakespeare", "Charles Dickens", "Mark Twain"},
 		Answer:  1, // William Shakespeare
@@ -67,10 +67,10 @@ var questions = []models.Question{
 	{
 		ID: "6",
 		Text: map[string]string{
-			"en": "What element does 'O' represent on the periodic table?",
-			"ge": "Welches Element repräsentiert 'O' im Periodensystem?",
-			"pt": "Qual elemento 'O' representa na tabela periódica",
-			"sw": "Vilket element representerar 'O' på det periodiska systemet",
+			"default": "What element does 'O' represent on the periodic table?",
+			"de":      "Welches Element repräsentiert 'O' im Periodensystem?",
+			"pt":      "Qual elemento 'O' representa na tabela periódica",
+			"sv":      "Vilket element representerar 'O' på det periodiska systemet",
 		},
 		Options: []string{"Gold", "Oxygen", "Silver", "Iron"},
 		Answer:  1, // Oxygen
@@ -78,10 +78,10 @@ var questions = []models.Question{
 	{
 		ID: "7",
 		Text: map[string]string{
-			"en": "Who is known as the father of Geometry?",
-			"ge": "Wer ist als der Vater der Geometrie bekannt?",
-			"pt": "Quem é conhecido como o pai da Geometria?",
-			"sw": "Vem är känd som geometriens far?",
+			"default": "Who is known as the father of Geometry?",
+			"de":      "Wer ist als der Vater der Geometrie bekannt?",
+			"pt":      "Quem é conhecido como o pai da Geometria?",
+			"sv":      "Vem är känd som geometriens far?",
 		},
 		Options: []string{"Aristotle", "Euclid", "Pythagoras", "Kepler"},
 		Answer:  1, // Euclid
@@ -90,20 +90,20 @@ var questions = []models.Question{
 		ID:      "8",
 		Options: []string{"Seoul", "Beijing", "Tokyo", "Bangkok"},
 		Text: map[string]string{
-			"en": "What is the capital of Japan?",
-			"ge": "Was ist die Hauptstadt von Japan?",
-			"pt": "Qual é a capital do Japão?",
-			"sw": "Vad är huvudstaden i Japan?",
+			"default": "What is the capital of Japan?",
+			"de":      "Was ist die Hauptstadt von Japan?",
+			"pt":      "Qual é a capital do Japão?",
+			"sv":      "Vad är huvudstaden i Japan?",
 		},
 		Answer: 2, // Tokyo
 	},
 	{
 		ID: "9",
 		Text: map[string]string{
-			"en": "Which is the largest planet in our solar system?",
-			"ge": "Welcher ist der größte Planet in unserem Sonnensystem?",
-			"pt": "Qual é o maior planeta em nosso sistema solar?",
-			"sw": "Vilken är den största planeten i vårt solsystem?",
+			"default": "Which is the largest planet in our solar system?",
+			"de":      "Welcher ist der größte Planet in unserem Sonnensystem?",
+			"pt":      "Qual é o maior planeta em nosso sistema solar?",
+			"sv":      "Vilken är den största planeten i vårt solsystem?",
 		},
 		Options: []string{"Earth", "Jupiter", "Saturn", "Mars"},
 		Answer:  1, // Jupiter
@@ -111,10 +111,10 @@ var questions = []models.Question{
 	{
 		ID: "10",
 		Text: map[string]string{
-			"en": "Who wrote the novel '1984'?",
-			"ge": "Wer schrieb den Roman '1984'?",
-			"pt": "Quem escreveu o romance '1984'?",
-			"sw": "Vem skrev romanen '1984'?",
+			"default": "Who wrote the novel '1984'?",
+			"de":      "Wer schrieb den Roman '1984'?",
+			"pt":      "Quem escreveu o romance '1984'?",
+			"sv":      "Vem skrev romanen '1984'?",
 		},
 		Options: []string{"George Orwell", "Aldous Huxley", "Ray Bradbury", "H.G. Wells"},
 		Answer:  0, // George Orwell
