@@ -12,6 +12,9 @@ import { ref, onMounted, watch } from 'vue'
 import 'survey-core/defaultV2.min.css'
 import { Model } from 'survey-core'
 import { ContrastDarkPanelless } from 'survey-core/themes/contrast-dark-panelless'
+import 'survey-core/i18n/portuguese'
+import 'survey-core/i18n/german'
+import 'survey-core/i18n/swedish'
 import { useQuizStore } from '@/stores/quiz'
 
 const survey = ref(null)
@@ -20,11 +23,7 @@ const quizStore = useQuizStore()
 
 watch(survey, (newValue) => {
   if (newValue) {
-    console.log('Survey complete:', newValue)
     newValue.onComplete.add((result) => {
-      console.log('Survey onComplete result:', result)
-      console.log('Survey onComplete:', result.data)
-
       quizStore.setResults(result.data)
     })
   }
@@ -34,7 +33,22 @@ function convertQuestionsToSurveyJSFormat (questions) {
   return {
     title: 'General Knowledge Quiz',
     showProgressBar: 'bottom',
+    showTimerPanel: "top",
+    maxTimeToFinishPage: 10,
+    firstPageIsStarted: true,
+    startSurveyText: "Start Quiz",
     pages: [
+      {
+        elements: [{
+          type: 'html',
+          html: 'You are about to start a quiz on General Knowledge. <br>You will have 10 seconds for every question.<br>Enter your name below and click <b>Start Quiz</b> to begin.'
+        }, {
+          type: 'text',
+          name: 'username',
+          titleLocation: 'hidden',
+          isRequired: true
+        }],
+      },
       ...questions.map((question, index) => ({
         elements: [{
           type: 'radiogroup',
@@ -42,12 +56,17 @@ function convertQuestionsToSurveyJSFormat (questions) {
           title: question.text,
           choices: question.options,
           correctAnswer: question.options[question.answer],
-          isRequired: true
         }]
       }))
-    ],
+    ]
   }
 }
+
+// const setLocale = (locale) => {
+//   survey.value.locale = locale
+// }
+
+// const showLo
 
 onMounted(async () => {
   try {
@@ -62,6 +81,7 @@ onMounted(async () => {
     survey.value.showTimerPanel = 'top'
     survey.value.maxTimeToFinishPage = 10
     survey.value.applyTheme(ContrastDarkPanelless)
+    survey.value.locale = 'pt'
   } catch (err) {
     console.error('Failed to fetch questions:', err)
   } finally {

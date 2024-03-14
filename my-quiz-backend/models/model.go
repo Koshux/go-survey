@@ -3,10 +3,10 @@ package models
 import "github.com/google/uuid"
 
 type Question struct {
-	ID      string   `json:"id"`
-	Text    string   `json:"text"`
-	Options []string `json:"options"`
-	Answer  int      `json:"answer"` // index of the correct option
+	ID      string            `json:"id"`
+	Text    map[string]string `json:"text"`
+	Options []string          `json:"options"`
+	Answer  int               `json:"answer"` // index of the correct option
 }
 
 type SubmittedAnswer struct {
