@@ -22,11 +22,20 @@ function reset () {
   quizStore.reset()
 }
 
-watch(correctAnswers, (newResults, oldResults) => {
+watch(correctAnswers, async (newResults, oldResults) => {
   if (newResults !== oldResults) {
     loading.value = false
     console.log('newResults:', JSON.stringify(JSON.parse(newResults)))
-
+    // TODO: create composable to send results to server
+    const quizResult = await fetch('http://localhost:8080/api/v1/quiz/answers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(JSON.parse(newResults))
+    })
+    quizStore.setQuizResult(await quizResult.json())
+    console.log('quizResult:', quizResult)
     // quizStore.setSurveySetting('completedHtml', `
     //   <h4>You got <b>${correctAnswers}</b> out of <b>${quizStore.results.length}</b> correct answers.</h4>
     // `)

@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 
 export const useQuizStore = defineStore('quiz', () => {
   const questions = ref([])
+  const quizResult = ref({})
   const results = ref([])
   const survey = ref(null)
 
@@ -31,6 +32,10 @@ export const useQuizStore = defineStore('quiz', () => {
     }, 0)
   })
 
+  function setQuizResult (data) {
+    quizResult.value = data
+  }
+
   function setResults (data) {
     results.value = data
   }
@@ -52,6 +57,7 @@ export const useQuizStore = defineStore('quiz', () => {
     resultCount,
     survey,
     setQuestions,
+    setQuizResult,
     setResults,
   }
 })

@@ -51,6 +51,7 @@ function convertQuestionsToSurveyJSFormat (questions) {
 
 onMounted(async () => {
   try {
+    // TODO: create composable to send results to server
     const response = await fetch('http://localhost:8080/api/v1/quiz/questions')
     const questions = await response.json()
     quizStore.setQuestions(questions)

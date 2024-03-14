@@ -18,6 +18,7 @@ func SetupRoutes(logger *zap.Logger, quizApi *mux.Router) {
 func setupMiddleware(logger *zap.Logger, api *mux.Router) {
 	api.Use(func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			enableCors(&w)
 			logger.Info("Request received", zap.String("path", r.URL.Path))
 			next.ServeHTTP(w, r)
 		})
@@ -39,10 +40,11 @@ func setupHandlers(logger *zap.Logger, api *mux.Router) {
 		quiz.GetQuestions(w, logger)
 	}).Methods("GET")
 
+	// Preflight issue for local dev using POST - https://stackoverflow.com/a/55125817
 	api.HandleFunc("/answers", func(w http.ResponseWriter, r *http.Request) {
 		enableCors(&w)
 		quiz.SubmitQuizAnswers(w, r, logger)
-	}).Methods("POST")
+	}).Methods("POST", "OPTIONS")
 
 	api.HandleFunc("/answers", func(w http.ResponseWriter, r *http.Request) {
 		enableCors(&w)
