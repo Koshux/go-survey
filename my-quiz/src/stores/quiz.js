@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useQuizStore = defineStore('quiz', () => {
@@ -6,6 +6,7 @@ export const useQuizStore = defineStore('quiz', () => {
   const quizResult = ref({})
   const results = ref([])
   const survey = ref(null)
+  const currentLanguage = ref('en')
 
   const resultCount = computed(() => {
     return results.value != null ? Object.keys(results.value).length : 0
@@ -32,6 +33,17 @@ export const useQuizStore = defineStore('quiz', () => {
     }, 0)
   })
 
+  watch(() => currentLanguage.value, (language) => {
+    if (survey.value != null) {
+      console.log('Language changed to', language)
+      survey.value.locale = language
+    }
+  })
+
+  function setSurveyModel (model) {
+    survey.value = model
+  }
+
   function setQuizResult (data) {
     quizResult.value = data
   }
@@ -48,9 +60,14 @@ export const useQuizStore = defineStore('quiz', () => {
     results.value = []
   }
 
+  function setLanguage (language) {
+    currentLanguage.value = language
+  }
+
   return {
     completed,
     correctAnswers,
+    currentLanguage,
     questions,
     reset,
     results,
@@ -59,5 +76,7 @@ export const useQuizStore = defineStore('quiz', () => {
     setQuestions,
     setQuizResult,
     setResults,
+    setLanguage,
+    setSurveyModel,
   }
 })

@@ -49,24 +49,20 @@ function convertQuestionsToSurveyJSFormat (questions) {
           isRequired: true
         }],
       },
-      ...questions.map((question, index) => ({
-        elements: [{
-          type: 'radiogroup',
-          name: question.id,
-          title: question.text,
-          choices: question.options,
-          correctAnswer: question.options[question.answer],
-        }]
-      }))
+      ...questions.map((question, index) => {
+        return ({
+          elements: [{
+            type: 'radiogroup',
+            name: question.id,
+            title: question.text,
+            choices: question.options,
+            correctAnswer: question.options[question.answer],
+          }]
+        })
+      })
     ]
   }
 }
-
-// const setLocale = (locale) => {
-//   survey.value.locale = locale
-// }
-
-// const showLo
 
 onMounted(async () => {
   try {
@@ -81,7 +77,7 @@ onMounted(async () => {
     survey.value.showTimerPanel = 'top'
     survey.value.maxTimeToFinishPage = 10
     survey.value.applyTheme(ContrastDarkPanelless)
-    survey.value.locale = 'pt'
+    quizStore.setSurveyModel(survey.value)
   } catch (err) {
     console.error('Failed to fetch questions:', err)
   } finally {
