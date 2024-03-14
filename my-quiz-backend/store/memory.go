@@ -104,14 +104,15 @@ func CalculatePercentile(logger *zap.Logger, userID uuid.UUID, score int) float6
 		}
 	}
 
+	// If there are less than 7 scores, the percentile cannot be calculated
+	// since the belowCount will be 0 and results in a division by zero. In this
+	// case, 999 is used to indicate an error.
 	N := len(scores)
-	if N <= 1 {
-		// 999 is used to indicate an error
+	if N <= 7 {
 		return 999
 	}
 
 	percentile := (float64(belowCount) / float64(N)) * 100
-
 	return percentile
 }
 
