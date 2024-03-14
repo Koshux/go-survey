@@ -1,13 +1,14 @@
 <script setup>
 import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import Quiz from '@/components/Quiz.vue'
 import Result from '@/components/Result.vue'
 import { useQuizStore } from '@/stores/quiz'
-import { storeToRefs } from 'pinia';
 
 const quizStore = useQuizStore()
 const { currentLanguage } = storeToRefs(quizStore)
 const selectedLanguage = ref(currentLanguage)
+const { completed } = storeToRefs(quizStore)
 
 function updateLanguage () {
   quizStore.setLanguage(selectedLanguage.value)
@@ -16,7 +17,7 @@ function updateLanguage () {
 
 <template>
   <div>
-    <div class="mb-2">
+    <div v-if="!completed" class="mb-2">
       <select v-model="selectedLanguage" @change="updateLanguage">
         <option value="en">English</option>
         <option value="de">German</option>
@@ -25,7 +26,7 @@ function updateLanguage () {
       </select>
     </div>
 
-    <Quiz v-if="!quizStore.completed" />
+    <Quiz v-if="!completed" />
     <Result v-else />
   </div>
 </template>

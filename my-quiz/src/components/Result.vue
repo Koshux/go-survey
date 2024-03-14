@@ -39,7 +39,7 @@ watch(correctAnswers, async (newResults, oldResults) => {
       }
     )
     quizStore.setQuizResult(quizResult)
-    console.log('quizResult:', quizResult)
+    console.log('quizResult:', answers)
   }
 }, { deep: true, immediate: true })
 </script>
