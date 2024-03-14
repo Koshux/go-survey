@@ -16,6 +16,7 @@ type SubmittedAnswer struct {
 }
 
 type QuizResult struct {
-	UserID uuid.UUID
-	Score  int
+	UserID     uuid.UUID
+	Score      int
+	Percentile float64
 }

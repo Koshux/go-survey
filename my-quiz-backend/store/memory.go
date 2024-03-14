@@ -1,11 +1,11 @@
 package store
 
 import (
-	"fmt"
 	"my-quiz-backend/models"
 	"sort"
 
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 )
 
 var questions = []models.Question{
@@ -73,34 +73,45 @@ var questions = []models.Question{
 var quizResults []models.QuizResult
 var submittedAnswers []models.SubmittedAnswer
 
-func CalculatePercentile(userID uuid.UUID) float64 {
+func CalculatePercentile(logger *zap.Logger, userID uuid.UUID, score int) float64 {
+	if userID == uuid.Nil {
+		logger.Error("Invalid userID", zap.String("userID", userID.String()))
+		return 0
+	}
+
 	var userScore int
 	var scores []int
+	var belowCount int // The number of scores below the user's score
 
-	for _, result := range quizResults {
-		scores = append(scores, result.Score)
-		fmt.Println(">> CalculatePercentile - result.Score:", result.Score)
-		if result.UserID == userID {
-			userScore = result.Score
+	if len(quizResults) == 0 {
+		scores = append(scores, score)
+		userScore = score
+	} else {
+		for _, result := range quizResults {
+			scores = append(scores, result.Score)
+			if result.UserID == userID {
+				userScore = result.Score
+			}
 		}
 	}
-	fmt.Println(">> CalculatePercentile - userScore:", userScore)
 
 	sort.Ints(scores)
 
-	// Find the rank of the user's score
-	rank := float64(len(scores))
-	for i, score := range scores {
-		if score == userScore {
-			rank = float64(i)
-			break
+	// Increment the belowCount for each score that is less than the user's score
+	for _, score := range scores {
+		if score < userScore {
+			belowCount++
 		}
 	}
 
-	fmt.Println(">> CalculatePercentile - Rank:", rank)
-	fmt.Println(">> CalculatePercentile - scores:", scores)
-	fmt.Println(">> CalculatePercentile - len(scores):", len(scores))
-	percentile := (rank / float64(len(scores))) * 100
+	N := len(scores)
+	if N <= 1 {
+		// 999 is used to indicate an error
+		return 999
+	}
+
+	percentile := (float64(belowCount) / float64(N)) * 100
+
 	return percentile
 }
 

@@ -37,15 +37,25 @@ func SubmitQuizAnswers(w http.ResponseWriter, r *http.Request, logger *zap.Logge
 	logger.Debug("Pending submitted answer", logSubmittedAnswer)
 
 	score := calculateScore(submittedAnswer)
-	store.AddQuizResult((models.QuizResult{
-		UserID: uuid.New(),
-		Score:  score,
-	}))
+	userID := uuid.New()
+
+	quizResult := models.QuizResult{
+		UserID:     userID,
+		Score:      score,
+		Percentile: 0,
+	}
+
+	// First add the submitted answer to the store then calculate the percentile
+	// because the quiz result must be added to the store before calculating the
+	// percentile. Otherwise the user's score will not be included in the scores
+	// used to calculate the percentile.
+	store.AddQuizResult(quizResult)
+	quizResult.Percentile = store.CalculatePercentile(logger, userID, score)
 
 	response := map[string]interface{}{
 		"message":    "Answers submitted successfully",
 		"score":      score,
-		"percentile": store.CalculatePercentile(submittedAnswer.UserID),
+		"percentile": quizResult.Percentile,
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
