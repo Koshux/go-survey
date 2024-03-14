@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Result</h1>
-    <p v-if="loading">Loading...</p>
+    <p v-if="isLoading">Loading...</p>
     <div v-else>
       <p>You got {{ correctAnswers }} out of {{ resultCount }} questions right!</p>
       <button @click="reset">Try again</button>
@@ -13,10 +13,11 @@
 import { watch, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useQuizStore } from '@/stores/quiz'
+import { useFetch } from '../composables/useFetch';
 
 const quizStore = useQuizStore()
-const { correctAnswers, resultCount } = storeToRefs(quizStore)
-const loading = ref(true)
+const { data: answers, error, execute, isLoading }= useFetch()
+const { correctAnswers, results, resultCount } = storeToRefs(quizStore)
 
 function reset () {
   quizStore.reset()
@@ -24,29 +25,21 @@ function reset () {
 
 watch(correctAnswers, async (newResults, oldResults) => {
   if (newResults !== oldResults) {
-    loading.value = false
-    console.log('newResults:', JSON.stringify(JSON.parse(newResults)))
-    // TODO: create composable to send results to server
-    const quizResult = await fetch('http://localhost:8080/api/v1/quiz/answers', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(JSON.parse(newResults))
-    })
-    quizStore.setQuizResult(await quizResult.json())
+    // I need to map the json object of quizStore.results to the format expected by the backend.
+    // The object is in the format { "Username": "asda", "Answers": { "1": "Paris", "2": "Mars", "3": "Pacific Ocean", "4": "1912", "5": "William Shakespeare" } }.
+    // It keeps going until 10 questions. The quizStore.results is the format like the object above for the property "Answers".
+    const quizResult = await execute(
+      'http://localhost:8080/api/v1/quiz/answers',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(results.value)
+      }
+    )
+    quizStore.setQuizResult(quizResult)
     console.log('quizResult:', quizResult)
-    // quizStore.setSurveySetting('completedHtml', `
-    //   <h4>You got <b>${correctAnswers}</b> out of <b>${quizStore.results.length}</b> correct answers.</h4>
-    // `)
-
-    // quizStore.setSurveySetting('completedHtmlOnCondition', [{
-    //     expression: `${correctAnswers} == 0`,
-    //     html: "<h4>Unfortunately, none of your answers are correct. Please try again.</h4>"
-    // }, {
-    //     expression: `${correctAnswers} == ${quizStore.results.length}`,
-    //     html: "<h4>Congratulations! You answered all the questions correctly!</h4>"
-    // }])
   }
 }, { deep: true, immediate: true })
 </script>
