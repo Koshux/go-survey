@@ -1,38 +1,78 @@
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
+import { useI18n } from 'vue-i18n'
 
 export const useQuizStore = defineStore('quiz', () => {
   const questions = ref([])
-  const results = ref([])
+  const quizResponse = ref({})
+  const surveyResults = ref([])
   const survey = ref(null)
+  const currentLanguage = ref('en')
+  const { locale, t } = useI18n()
 
   const resultCount = computed(() => {
-    return results.value != null ? Object.keys(results.value).length : 0
+    return surveyResults.value != null ? apiScore : 0
   })
 
   const completed = computed(() => {
-    return results.value != null && Object.keys(results.value).length > 0
+    return surveyResults.value != null && Object.keys(surveyResults.value).length > 0
   })
 
   const correctAnswers = computed(() => {
-    const { username, ...answers } = results.value
+    if (quizResponse.value == null) return 0
 
-    return Object.keys(answers).reduce((acc, questionId) => {
-      if (!questions.value.length) return acc
+    const { score } = quizResponse.value
 
-      const question = questions.value.find((q) => q.id === questionId)
-
-      if (!question) return acc
-
-      const correctAnswer = question.options[question.answer]
-      const userAnswer = answers[questionId]
-
-      return correctAnswer === userAnswer ? acc + 1 : acc
-    }, 0)
+    return score != null ? score : 0
   })
 
-  function setResults (data) {
-    results.value = data
+  const percentile = computed(() => {
+    const { percentile } = quizResponse.value
+
+    if (percentile == null) return t('result.percentile_invalid')
+    if (percentile === 999) return t('result.percentile_insufficient')
+    return t('result.percentile_ranked', {
+      percentile: percentile != null ? percentile : 0
+    })
+  })
+
+  const performanceCategory = computed(() => {
+    const { category } = quizResponse.value
+
+    if (category == null) return t('result.category_invalid')
+    return t('result.category', { category })
+  })
+
+  const score = computed(() => {
+    return t('result.score', {
+      correct: correctAnswers.value,
+      total: questions.value.length
+    })
+  })
+
+  const username = computed(() => {
+    const { username } = surveyResults.value
+
+    return username != null ? username : 'Anonymous'
+  })
+
+  watch(() => currentLanguage.value, (language) => {
+    if (survey.value != null) {
+      survey.value.locale = language
+      locale.value = language
+    }
+  })
+
+  function setSurveyModel (model) {
+    survey.value = model
+  }
+
+  function setSurveyResults (data) {
+    surveyResults.value = data
+  }
+
+  function setQuizResponse (data) {
+    quizResponse.value = data
   }
 
   function setQuestions (data) {
@@ -40,18 +80,30 @@ export const useQuizStore = defineStore('quiz', () => {
   }
 
   function reset () {
-    results.value = []
+    surveyResults.value = []
+  }
+
+  function setLanguage (language) {
+    currentLanguage.value = language
   }
 
   return {
     completed,
     correctAnswers,
+    currentLanguage,
+    percentile,
+    performanceCategory,
     questions,
     reset,
-    results,
+    surveyResults,
     resultCount,
+    score,
     survey,
+    username,
     setQuestions,
-    setResults,
+    setQuizResponse,
+    setSurveyResults,
+    setLanguage,
+    setSurveyModel,
   }
 })

@@ -1,43 +1,53 @@
 <template>
   <div>
-    <h1>Result</h1>
-    <p v-if="loading">Loading...</p>
+    <h1>{{ t('result.title', { username }) }}</h1>
+    <p v-if="isLoading">Loading...</p>
+    <p v-else-if="error">{{ error }}</p>
     <div v-else>
-      <p>You got {{ correctAnswers }} out of {{ resultCount }} questions right!</p>
-      <button @click="reset">Try again</button>
+      <p>{{ performanceCategory }}</p>
+      <p>{{ score }}</p>
+      <p>{{ percentile }}</p>
+      <button @click="reset">{{ t('result.reset') }}</button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { watch, ref } from 'vue'
+import { watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useQuizStore } from '@/stores/quiz'
+import { useFetch } from '../composables/useFetch'
+import { useI18n } from 'vue-i18n'
 
 const quizStore = useQuizStore()
-const { correctAnswers, resultCount } = storeToRefs(quizStore)
-const loading = ref(true)
+const { t } = useI18n()
+const { data: answers, error, execute, isLoading }= useFetch()
+const {
+  performanceCategory,
+  percentile,
+  score,
+  surveyResults,
+  username,
+} = storeToRefs(quizStore)
 
 function reset () {
   quizStore.reset()
 }
 
-watch(correctAnswers, (newResults, oldResults) => {
+watch(surveyResults, async (newResults, oldResults) => {
   if (newResults !== oldResults) {
-    loading.value = false
-    console.log('newResults:', JSON.stringify(JSON.parse(newResults)))
+    await execute(
+      'http://localhost:8080/api/v1/quiz/answers',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(surveyResults.value)
+      }
+    )
 
-    // quizStore.setSurveySetting('completedHtml', `
-    //   <h4>You got <b>${correctAnswers}</b> out of <b>${quizStore.results.length}</b> correct answers.</h4>
-    // `)
-
-    // quizStore.setSurveySetting('completedHtmlOnCondition', [{
-    //     expression: `${correctAnswers} == 0`,
-    //     html: "<h4>Unfortunately, none of your answers are correct. Please try again.</h4>"
-    // }, {
-    //     expression: `${correctAnswers} == ${quizStore.results.length}`,
-    //     html: "<h4>Congratulations! You answered all the questions correctly!</h4>"
-    // }])
+    quizStore.setQuizResponse(answers.value)
   }
 }, { deep: true, immediate: true })
 </script>
