@@ -22,13 +22,64 @@ const messages = {
     },
   },
   de: {
-
+    welcome: 'Willkommen zu meiner Quiz-App!',
+    start: 'Quiz starten',
+    anonymous: 'Anonym',
+    language: 'Sprache',
+    en: 'Englisch',
+    de: 'Deutsch',
+    pt: 'Portugiesisch',
+    sv: 'Schwedisch',
+    quiz: {
+      welcome: 'Willkommen zum Quiz!',
+      start: 'Quiz starten',
+    },
+    result: {
+      reset: 'Nochmal versuchen',
+      score_invalid: 'Du hast keine Punkte erzielt.',
+      score_insufficient: 'Es gibt nicht genügend Daten, um deinen Score zu berechnen. Bitte versuche es später erneut.',
+      score_ranked: 'Du hast besser als {percentile}% der Quizteilnehmer abgeschnitten.'
+    },
   },
   pt: {
-
+    welcome: 'Bem-vindo ao meu aplicativo de quiz!',
+    start: 'Começar Quiz',
+    anonymous: 'Anônimo',
+    language: 'Idioma',
+    en: 'Inglês',
+    de: 'Alemão',
+    pt: 'Português',
+    sv: 'Sueco',
+    quiz: {
+      welcome: 'Bem-vindo ao quiz!',
+      start: 'Começar Quiz',
+    },
+    result: {
+      reset: 'Tentar novamente',
+      score_invalid: 'Você não marcou nenhum ponto.',
+      score_insufficient: 'Não há dados suficientes para calcular sua pontuação, por favor, verifique mais tarde.',
+      score_ranked: 'Você marcou melhor do que {percentile}% dos participantes do quiz.'
+    },
   },
   sv: {
-
+    welcome: 'Välkommen till min quiz-app!',
+    start: 'Starta Quiz',
+    anonymous: 'Anonym',
+    language: 'Språk',
+    en: 'Engelska',
+    de: 'Tyska',
+    pt: 'Portugisiska',
+    sv: 'Svenska',
+    quiz: {
+      welcome: 'Välkommen till quizet!',
+      start: 'Starta Quiz',
+    },
+    result: {
+      reset: 'Försök igen',
+      score_invalid: 'Du har inte fått några poäng.',
+      score_insufficient: 'Det finns otillräckliga data för att beräkna din poäng, vänligen kontrollera senare.',
+      score_ranked: 'Du fick bättre än {percentile}% av quizdeltagarna.'
+    },
   }
 }
 
