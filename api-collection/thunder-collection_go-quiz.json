@@ -1,0 +1,64 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "go-quiz",
+    "dateExported": "2024-03-16T20:43:47.959Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "d7478ee4-cd63-4b14-a1ac-94cbe3e11587",
+            "colId": "b3ee7f38-2472-4cf4-82ab-723f24f76dd1",
+            "containerId": "",
+            "name": "Quiz Questions",
+            "url": "http://localhost:8080/api/v1/quiz/questions",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2024-03-12T19:30:35.981Z",
+            "modified": "2024-03-13T23:30:40.415Z",
+            "headers": [],
+            "params": [],
+            "reqType": "get",
+            "tests": []
+        },
+        {
+            "_id": "d6469a28-d665-4773-aa10-81c03cdd6a63",
+            "colId": "b3ee7f38-2472-4cf4-82ab-723f24f76dd1",
+            "containerId": "",
+            "name": "Quiz Answers",
+            "url": "http://localhost:8080/api/v1/quiz/answers",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-03-12T19:32:38.691Z",
+            "modified": "2024-03-16T20:42:54.917Z",
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"username\": \"asda\",\n  \"answers\": {\n    \"1\": \"Paris\",\n    \"2\": \"Mars\",\n    \"3\": \"Pacific Ocean\",\n    \"4\": \"1912\",\n    \"5\": \"William Shakespeare\"\n  }\n}",
+                "form": []
+            },
+            "reqType": "post",
+            "tests": []
+        },
+        {
+            "_id": "960fb994-ee5f-4f82-9e6d-dadf2b15a3bb",
+            "colId": "b3ee7f38-2472-4cf4-82ab-723f24f76dd1",
+            "containerId": "",
+            "name": "Retrieve Quiz Results",
+            "url": "http://localhost:8080/api/v1/quiz/answers",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2024-03-12T23:14:50.862Z",
+            "modified": "2024-03-13T23:22:41.917Z",
+            "headers": [],
+            "params": [],
+            "reqType": "get",
+            "tests": []
+        }
+    ]
+}
