@@ -62,6 +62,7 @@ func SubmitQuizAnswers(w http.ResponseWriter, r *http.Request, logger *zap.Logge
 		"message":    "Answers submitted successfully",
 		"score":      score,
 		"percentile": quizResult.Percentile,
+		"category":   quizResult.Category,
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
