@@ -167,6 +167,30 @@ func CalculatePercentile(logger *zap.Logger, userID uuid.UUID, score int) float6
 	return roundToTwoDecimalPlaces(percentile)
 }
 
+// Used to recalculate the percentiles for all users who have taken the quiz.
+// Essentially, this function is called when the number of quiz results is greater
+// than 7. This is because the percentile is calculated based on the number of
+// scores that are less than the user's score. If there are less than 7 scores,
+// the percentile cannot be calculated since the belowCount will be 0 and results
+// in a division by zero. In this case, 999 is used to indicate an error.
+func RecalculatePercentiles(logger *zap.Logger) {
+	for i, result := range quizResults {
+		quizResults[i].Percentile = CalculatePercentile(logger, result.UserID, result.Score)
+	}
+}
+
+// Get the quiz result for a user by their userID. If the user has not taken the
+// quiz, a quiz result with a percentile of 999 is returned.
+func GetQuizResultByUserID(userID uuid.UUID) (models.QuizResult, bool) {
+	for _, result := range quizResults {
+		if result.UserID == userID {
+			return result, true
+		}
+	}
+
+	return models.QuizResult{Percentile: 999}, false
+}
+
 func roundToTwoDecimalPlaces(num float64) float64 {
 	return math.Round(num*100) / 100
 }

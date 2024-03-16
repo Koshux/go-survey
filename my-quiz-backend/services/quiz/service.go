@@ -52,6 +52,10 @@ func SubmitQuizAnswers(w http.ResponseWriter, r *http.Request, logger *zap.Logge
 	store.AddQuizResult(quizResult)
 	quizResult.Percentile = store.CalculatePercentile(logger, userID, score)
 
+	if len(store.GetQuizResults()) > 7 {
+		store.RecalculatePercentiles(logger)
+	}
+
 	response := map[string]interface{}{
 		"message":    "Answers submitted successfully",
 		"score":      score,
