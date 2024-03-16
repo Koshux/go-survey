@@ -19,4 +19,5 @@ type QuizResult struct {
 	UserID     uuid.UUID
 	Score      int
 	Percentile float64
+	Category   string
 }

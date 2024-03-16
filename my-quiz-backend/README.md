@@ -1,13 +1,13 @@
 # Quiz App Backend
 
-This document outlines the backend setup for a simple quiz application built with Go. The backend serves quiz questions and processes quiz submissions, including calculating percentile ranks for quiz takers.
+This document outlines the backend setup for a simple quiz application built with Go. The backend serves quiz questions, processes quiz submissions, and calculates percentile ranks for quiz takers, with a nuanced approach to evaluating performances through fuzzy logic.
 
 ## Overview
 
 The backend is designed to:
-- Serve a set of quiz questions.
+- Serve a set of multilingual quiz questions.
 - Accept quiz submissions and calculate scores.
-- Calculate and return a user's percentile rank based on their score relative to all submissions.
+- Calculate and return a user's percentile rank and performance category based on their score relative to all submissions.
 
 ## Technology Stack
 
@@ -22,7 +22,7 @@ The backend is designed to:
 
 ### Prerequisites
 
-Ensure you have Go installed on your system. You can download it from [the official Go website](https://golang.org/dl/).
+Ensure you have Go installed on your system. Download it from [the official Go website](https://golang.org/dl/).
 
 ### Running the Server
 
@@ -36,23 +36,21 @@ Ensure you have Go installed on your system. You can download it from [the offic
 
 ## API Endpoints
 
-- **GET `/questions`**: Fetches a list of quiz questions.
-- **POST `/answers`**: Submits answers for the quiz. This endpoint calculates the user's score, their percentile rank, and returns this information in the response.
-- **GET `/answers`**: Fetches a list of all quiz submissions which includes the user's score and percentile rank.
+- **GET `/questions`**: Fetches a list of multilingual quiz questions.
+- **POST `/answers`**: Submits answers for the quiz. This endpoint calculates the user's score, their percentile rank, returns this information, and the performance category in the response.
+- **GET `/results`**: Fetches a list of all quiz submissions, including users' scores, percentile ranks, and performance categories.
 
 ### Questions Endpoint
 
-Returns a JSON array of quiz questions. Each question includes an `id`, `text`, options, and the index of the correct answer.
+Returns a JSON array of multilingual quiz questions, including question text, options, and the index of the correct answer.
 
 Example request:
-
 ```plaintext
 GET /questions HTTP/1.1
 Host: localhost:8080
 ```
 
 Example response:
-
 ```json
 [
   {
@@ -66,58 +64,49 @@ Example response:
 
 ### Answers Endpoint
 
-Accepts a JSON object containing the user's answers and returns the user's score and percentile rank.
+Accepts a JSON object containing the user's answers and returns the user's score, percentile rank, and performance category.
 
 Example request:
 ```plaintext
 POST /answers HTTP/1.1
 Host: localhost:8080
 Content-Type: application/json
-```
 
-```json
 {
   "userId": "unique-user-id",
   "answers": {
     "1": "Paris",
-    "2": "Mars",
-    "3": "Pacific Ocean",
-    // More questionId: answer pairs
+    "2": "Mars"
   }
 }
 ```
 
-
 Example response:
-
 ```json
 {
   "userID": "unique-user-id",
   "score": 2,
-  "percentile": 75
+  "percentile": 75,
+  "category": "Good to Excellent"
 }
 ```
 
-### Understanding the Percentile Rank
+## Understanding the Percentile Rank and Performance Category
 
-The percentile rank indicates your performance relative to all quiz takers. For example, a percentile rank of 87.5 means you scored better than approximately 87.5% of participants. This feedback helps gauge where you stand and encourages improvement.
+- The **percentile rank** indicates a user's performance relative to all quiz takers. For example, a percentile rank of 75 means the user scored better than approximately 75% of participants.
+- The **performance category** provides nuanced feedback, categorizing performances into "Needs Improvement to Average", "Average to Good", "Good to Excellent", based on fuzzy logic evaluation of the scores.
 
 ## Development Notes
 
-- The server uses in-memory storage for simplicity. For a production environment, consider integrating a persistent database.
-- Cross-Origin Resource Sharing (CORS) is enabled for all origins. Adjust the CORS settings according to your security requirements.
-- The percentile calculation assumes a significant number of submissions for accuracy. For early-stage testing, special handling may adjust feedback for users.
-
-### Important Notes
-
-- The actual answer indices (`"answer": 2`) are not included in the response to the `/questions` endpoint. This information is for documentation purposes only to illustrate the structure of a question.
-- While developing or testing, you might encounter a special percentile value indicating insufficient data for a meaningful calculation. This mechanism is in place to ensure the accuracy and reliability of percentile feedback as more users participate.
+- The server uses in-memory storage for simplicity. Consider a database for production environments.
+- CORS is enabled for all origins. Adjust according to your security requirements.
+- Performance categories are determined using fuzzy logic to provide nuanced feedback beyond simple numerical scores.
 
 ## Future Enhancements
 
-- Integrate a database for persistent storage of questions and submissions.
-- Implement user authentication and session management.
-- Expand the API to support dynamic creation and management of quiz questions.
+- Persistent database integration for questions and submissions.
+- User authentication for personalized quiz experiences.
+- API expansion for dynamic quiz management.
 
 ## License
 

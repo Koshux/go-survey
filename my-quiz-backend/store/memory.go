@@ -2,6 +2,7 @@ package store
 
 import (
 	"math"
+	fuzzylogic "my-quiz-backend/classifiers"
 	"my-quiz-backend/models"
 	"sort"
 
@@ -165,6 +166,25 @@ func CalculatePercentile(logger *zap.Logger, userID uuid.UUID, score int) float6
 
 	percentile := (float64(belowCount) / float64(N)) * 100
 	return roundToTwoDecimalPlaces(percentile)
+}
+
+func PerformanceCategory(score int) string {
+	lowMembership := fuzzylogic.LowScoreMembership(score)
+	mediumMembership := fuzzylogic.MediumScoreMembership(score)
+	highMembership := fuzzylogic.HighScoreMembership(score)
+
+	maxMembership := math.Max(lowMembership, math.Max(mediumMembership, highMembership))
+
+	switch maxMembership {
+	case highMembership:
+		return "Good to Excellent"
+	case mediumMembership:
+		return "Average to Good"
+	case lowMembership:
+		return "Needs Improvement to Average"
+	default:
+		return "Unknown"
+	}
 }
 
 // Used to recalculate the percentiles for all users who have taken the quiz.

@@ -37,12 +37,14 @@ func SubmitQuizAnswers(w http.ResponseWriter, r *http.Request, logger *zap.Logge
 	logger.Debug("Pending submitted answer", logSubmittedAnswer)
 
 	score := calculateScore(submittedAnswer)
+	category := store.PerformanceCategory(score)
 	userID := uuid.New()
 
 	quizResult := models.QuizResult{
 		UserID:     userID,
 		Score:      score,
 		Percentile: 0,
+		Category:   category,
 	}
 
 	// First add the submitted answer to the store then calculate the percentile
