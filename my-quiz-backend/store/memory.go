@@ -1,6 +1,7 @@
 package store
 
 import (
+	"math"
 	"my-quiz-backend/models"
 	"sort"
 
@@ -163,7 +164,11 @@ func CalculatePercentile(logger *zap.Logger, userID uuid.UUID, score int) float6
 	}
 
 	percentile := (float64(belowCount) / float64(N)) * 100
-	return percentile
+	return roundToTwoDecimalPlaces(percentile)
+}
+
+func roundToTwoDecimalPlaces(num float64) float64 {
+	return math.Round(num*100) / 100
 }
 
 func GetCorrectAnswer(questionID string) (string, bool) {
