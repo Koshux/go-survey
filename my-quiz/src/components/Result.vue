@@ -1,10 +1,9 @@
 <template>
   <div>
-    <h1>Result</h1>
+    <h1>Thank you, {{ username }}!</h1>
     <p v-if="isLoading">Loading...</p>
     <p v-else-if="error">{{ error }}</p>
     <div v-else>
-      <p>Thanks {{ username }}!</p>
       <p>You got {{ correctAnswers }} out of {{ questions.length }} questions right!</p>
       <p>{{ percentile }}</p>
       <button @click="reset">Try again</button>
@@ -44,6 +43,7 @@ watch(surveyResults, async (newResults, oldResults) => {
         body: JSON.stringify(surveyResults.value)
       }
     )
+
     quizStore.setQuizResponse(answers.value)
   }
 }, { deep: true, immediate: true })

@@ -32,15 +32,15 @@ watch(survey, (newValue) => {
     newValue.onComplete.add((result) => {
       console.log('result:', result.data);
       const res = {}
-      res.Username = result.data.username
-      res.Answers = {}
+      res.username = result.data.username
+      res.answers = {}
 
       // Convert the result data to the API submit answers format.
       Object.keys(result.data).map(key => {
         if (isNaN(parseInt(key))) {
-          res.Username = result.data[key]
+          res.username = result.data[key]
         } else {
-          res.Answers[key] = result.data[key]
+          res.answers[key] = result.data[key]
         }
       })
 

@@ -1,5 +1,6 @@
 import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
+import { useI18n } from 'vue-i18n'
 
 export const useQuizStore = defineStore('quiz', () => {
   const questions = ref([])
@@ -7,6 +8,7 @@ export const useQuizStore = defineStore('quiz', () => {
   const surveyResults = ref([])
   const survey = ref(null)
   const currentLanguage = ref('en')
+  const { locale, t } = useI18n()
 
   const resultCount = computed(() => {
     return surveyResults.value != null ? apiScore : 0
@@ -27,11 +29,16 @@ export const useQuizStore = defineStore('quiz', () => {
   const percentile = computed(() => {
     const { percentile } = quizResponse.value
 
-    return `You scored better than ${percentile != null ? percentile : 0}% of the quiz takers.`
+    if (percentile == null) return t('result.score_invalid')
+    if (percentile === 999) return t('result.score_insufficient')
+    return t('result.score_ranked', {
+      percentile: percentile != null ? percentile : 0
+    })
   })
 
   const username = computed(() => {
-    const { username } = quizResponse.value
+    const { username } = surveyResults.value
+    console.log('survey results', surveyResults.value, username)
 
     return username != null ? username : 'Anonymous'
   })
@@ -40,6 +47,7 @@ export const useQuizStore = defineStore('quiz', () => {
     if (survey.value != null) {
       console.log('Language changed to', language)
       survey.value.locale = language
+      locale.value = language
     }
   })
 
