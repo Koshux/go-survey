@@ -48,7 +48,7 @@ quizStore.setQuestions(fetchedQuestions);
 After completing the quiz, results are stored in the Pinia store:
 
 ```javascript
-quizStore.setResults(surveyResults);
+quizStore.setSurveyResults(surveyResults);
 ```
 
 Results are accessed in `Result.vue` to display the user's performance.

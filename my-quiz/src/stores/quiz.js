@@ -3,34 +3,37 @@ import { defineStore } from 'pinia'
 
 export const useQuizStore = defineStore('quiz', () => {
   const questions = ref([])
-  const quizResult = ref({})
-  const results = ref([])
+  const quizResponse = ref({})
+  const surveyResults = ref([])
   const survey = ref(null)
   const currentLanguage = ref('en')
 
   const resultCount = computed(() => {
-    return results.value != null ? Object.keys(results.value).length : 0
+    return surveyResults.value != null ? apiScore : 0
   })
 
   const completed = computed(() => {
-    return results.value != null && Object.keys(results.value).length > 0
+    return surveyResults.value != null && Object.keys(surveyResults.value).length > 0
   })
 
   const correctAnswers = computed(() => {
-    const { username, ...answers } = results.value
+    if (quizResponse.value == null) return 0
 
-    return Object.keys(answers).reduce((acc, questionId) => {
-      if (!questions.value.length) return acc
+    const { score } = quizResponse.value
 
-      const question = questions.value.find((q) => q.id === questionId)
+    return score != null ? score : 0
+  })
 
-      if (!question) return acc
+  const percentile = computed(() => {
+    const { percentile } = quizResponse.value
 
-      const correctAnswer = question.options[question.answer]
-      const userAnswer = answers[questionId]
+    return `You scored better than ${percentile != null ? percentile : 0}% of the quiz takers.`
+  })
 
-      return correctAnswer === userAnswer ? acc + 1 : acc
-    }, 0)
+  const username = computed(() => {
+    const { username } = quizResponse.value
+
+    return username != null ? username : 'Anonymous'
   })
 
   watch(() => currentLanguage.value, (language) => {
@@ -44,12 +47,12 @@ export const useQuizStore = defineStore('quiz', () => {
     survey.value = model
   }
 
-  function setQuizResult (data) {
-    quizResult.value = data
+  function setSurveyResults (data) {
+    surveyResults.value = data
   }
 
-  function setResults (data) {
-    results.value = data
+  function setQuizResponse (data) {
+    quizResponse.value = data
   }
 
   function setQuestions (data) {
@@ -57,7 +60,7 @@ export const useQuizStore = defineStore('quiz', () => {
   }
 
   function reset () {
-    results.value = []
+    surveyResults.value = []
   }
 
   function setLanguage (language) {
@@ -68,14 +71,16 @@ export const useQuizStore = defineStore('quiz', () => {
     completed,
     correctAnswers,
     currentLanguage,
+    percentile,
     questions,
     reset,
-    results,
+    surveyResults,
     resultCount,
     survey,
+    username,
     setQuestions,
-    setQuizResult,
-    setResults,
+    setQuizResponse,
+    setSurveyResults,
     setLanguage,
     setSurveyModel,
   }

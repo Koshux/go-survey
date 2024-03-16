@@ -1,8 +1,11 @@
 <template>
   <div>
-    <div v-if="loading">Loading...</div>
+    <div v-if="isLoading">Loading...</div>
+    <div v-else-if="error">{{ error }}</div>
     <div v-else>
-      <SurveyComponent :model="survey" />
+      <template v-if="survey != null">
+        <SurveyComponent :model="survey" />
+      </template>
     </div>
   </div>
 </template>
@@ -15,21 +18,39 @@ import { ContrastDarkPanelless } from 'survey-core/themes/contrast-dark-panelles
 import 'survey-core/i18n/portuguese'
 import 'survey-core/i18n/german'
 import 'survey-core/i18n/swedish'
+
 import { useQuizStore } from '@/stores/quiz'
+import { useFetch } from '@/composables/useFetch'
 
 const survey = ref(null)
-const loading = ref(true)
 const quizStore = useQuizStore()
+
+const { data, error, execute, isLoading }= useFetch()
 
 watch(survey, (newValue) => {
   if (newValue) {
     newValue.onComplete.add((result) => {
-      quizStore.setResults(result.data)
+      console.log('result:', result.data);
+      const res = {}
+      res.Username = result.data.username
+      res.Answers = {}
+
+      // Convert the result data to the API submit answers format.
+      Object.keys(result.data).map(key => {
+        if (isNaN(parseInt(key))) {
+          res.Username = result.data[key]
+        } else {
+          res.Answers[key] = result.data[key]
+        }
+      })
+
+      quizStore.setSurveyResults(res)
     })
   }
 }, { immediate: true })
 
 function convertQuestionsToSurveyJSFormat (questions) {
+  console.log('questions:', questions)
   return {
     title: 'General Knowledge Quiz',
     showProgressBar: 'bottom',
@@ -65,23 +86,19 @@ function convertQuestionsToSurveyJSFormat (questions) {
 }
 
 onMounted(async () => {
-  try {
-    // TODO: create composable to send results to server
-    const response = await fetch('http://localhost:8080/api/v1/quiz/questions')
-    const questions = await response.json()
-    quizStore.setQuestions(questions)
+  await execute(
+    'http://localhost:8080/api/v1/quiz/questions',
+    { method: 'GET', headers: { 'Content-Type': 'application/json' } }
+  )
+  quizStore.setQuestions(data.value)
+  console.log('questions:', data)
 
-    const surveyJson = convertQuestionsToSurveyJSFormat(questions)
-    survey.value = new Model(surveyJson)
-    survey.value.startTimerOnFirstPage = false
-    survey.value.showTimerPanel = 'top'
-    survey.value.maxTimeToFinishPage = 10
-    survey.value.applyTheme(ContrastDarkPanelless)
-    quizStore.setSurveyModel(survey.value)
-  } catch (err) {
-    console.error('Failed to fetch questions:', err)
-  } finally {
-    loading.value = false
-  }
+  const surveyJson = convertQuestionsToSurveyJSFormat(data.value)
+  survey.value = new Model(surveyJson)
+  survey.value.startTimerOnFirstPage = false
+  survey.value.showTimerPanel = 'top'
+  survey.value.maxTimeToFinishPage = 10
+  survey.value.applyTheme(ContrastDarkPanelless)
+  quizStore.setSurveyModel(survey.value)
 })
 </script>
