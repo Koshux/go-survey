@@ -12,13 +12,15 @@ const messages = {
     sv: 'Swedish',
     quiz: {
       welcome: 'Welcome to the quiz!',
-      start: 'Start Quiz',
+      starter_page: 'You are about to start a quiz on General Knowledge. <br>You will have 10 seconds for every question.<br>Enter your name below and click <b>Start Quiz</b> to begin.',
     },
     result: {
+      title: 'Thank you, {username}!',
       reset: 'Try again',
-      score_invalid: 'You didn\'t score any points.',
-      score_insufficient: 'There are insufficient data to calculate your score, please check back later.',
-      score_ranked: 'You scored better than {percentile}% of the quiz takers.'
+      score: 'You got {correct} out of {total} questions right!',
+      percentile_invalid: 'You didn\'t score any points.',
+      percentile_insufficient: 'There are insufficient data to calculate your score, please check back later.',
+      percentile_ranked: 'You scored better than {percentile}% of the quiz takers.'
     },
   },
   de: {
@@ -33,12 +35,15 @@ const messages = {
     quiz: {
       welcome: 'Willkommen zum Quiz!',
       start: 'Quiz starten',
+      starter_page: 'Du bist dabei, ein Quiz über Allgemeinwissen zu starten. <br>Du hast 10 Sekunden für jede Frage.<br>Gib deinen Namen unten ein und klicke auf <b>Quiz starten</b>, um zu beginnen.',
     },
     result: {
+      title: 'Danke, {username}!',
       reset: 'Nochmal versuchen',
-      score_invalid: 'Du hast keine Punkte erzielt.',
-      score_insufficient: 'Es gibt nicht genügend Daten, um deinen Score zu berechnen. Bitte versuche es später erneut.',
-      score_ranked: 'Du hast besser als {percentile}% der Quizteilnehmer abgeschnitten.'
+      score: 'Du hast {correct} von {total} Fragen richtig beantwortet!',
+      percentile_invalid: 'Du hast keine Punkte erzielt.',
+      percentile_insufficient: 'Es gibt nicht genügend Daten, um deinen Score zu berechnen. Bitte versuche es später erneut.',
+      percentile_ranked: 'Du hast besser als {percentile}% der Quizteilnehmer abgeschnitten.'
     },
   },
   pt: {
@@ -53,12 +58,15 @@ const messages = {
     quiz: {
       welcome: 'Bem-vindo ao quiz!',
       start: 'Começar Quiz',
+      starter_page: 'Você está prestes a começar um quiz sobre conhecimentos gerais. <br>Você terá 10 segundos para cada pergunta.<br>Insira seu nome abaixo e clique em <b>Começar Quiz</b> para começar.',
     },
     result: {
+      title: 'Obrigado, {username}!',
       reset: 'Tentar novamente',
-      score_invalid: 'Você não marcou nenhum ponto.',
-      score_insufficient: 'Não há dados suficientes para calcular sua pontuação, por favor, verifique mais tarde.',
-      score_ranked: 'Você marcou melhor do que {percentile}% dos participantes do quiz.'
+      score: 'Você acertou {correct} de {total} perguntas!',
+      percentile_invalid: 'Você não marcou nenhum ponto.',
+      percentile_insufficient: 'Não há dados suficientes para calcular sua pontuação, por favor, verifique mais tarde.',
+      percentile_ranked: 'Você marcou melhor do que {percentile}% dos participantes do quiz.'
     },
   },
   sv: {
@@ -73,12 +81,15 @@ const messages = {
     quiz: {
       welcome: 'Välkommen till quizet!',
       start: 'Starta Quiz',
+      starter_page: 'Du är på väg att starta ett quiz om Allmänbildning. <br>Du har 10 sekunder på dig för varje fråga.<br>Ange ditt namn nedan och klicka på <b>Starta Quiz</b> för att börja.',
     },
     result: {
+      title: 'Tack, {username}!',
       reset: 'Försök igen',
-      score_invalid: 'Du har inte fått några poäng.',
-      score_insufficient: 'Det finns otillräckliga data för att beräkna din poäng, vänligen kontrollera senare.',
-      score_ranked: 'Du fick bättre än {percentile}% av quizdeltagarna.'
+      score: 'Du fick {correct} av {total} frågor rätt!',
+      percentile_invalid: 'Du har inte fått några poäng.',
+      percentile_insufficient: 'Det finns otillräckliga data för att beräkna din poäng, vänligen kontrollera senare.',
+      percentile_ranked: 'Du fick bättre än {percentile}% av quizdeltagarna.'
     },
   }
 }

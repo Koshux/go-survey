@@ -1,12 +1,12 @@
 <template>
   <div>
-    <h1>Thank you, {{ username }}!</h1>
+    <h1>{{ t('result.title', { username }) }}</h1>
     <p v-if="isLoading">Loading...</p>
     <p v-else-if="error">{{ error }}</p>
     <div v-else>
-      <p>You got {{ correctAnswers }} out of {{ questions.length }} questions right!</p>
+      <p>{{ score }}</p>
       <p>{{ percentile }}</p>
-      <button @click="reset">Try again</button>
+      <button @click="reset">{{ t('result.reset') }}</button>
     </div>
   </div>
 </template>
@@ -15,14 +15,15 @@
 import { watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useQuizStore } from '@/stores/quiz'
-import { useFetch } from '../composables/useFetch';
+import { useFetch } from '../composables/useFetch'
+import { useI18n } from 'vue-i18n'
 
 const quizStore = useQuizStore()
+const { t } = useI18n()
 const { data: answers, error, execute, isLoading }= useFetch()
 const {
-  correctAnswers,
   percentile,
-  questions,
+  score,
   surveyResults,
   username,
 } = storeToRefs(quizStore)

@@ -11,7 +11,6 @@ export function useFetch () {
     data.value = null
 
     try {
-      console.log('Fetching data from', url);
       const response = await fetch(url, options)
 
       if (!response.ok) {

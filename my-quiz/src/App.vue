@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import Quiz from '@/components/Quiz.vue'
 import Result from '@/components/Result.vue'
@@ -7,8 +8,11 @@ import { useQuizStore } from '@/stores/quiz'
 
 const quizStore = useQuizStore()
 const { currentLanguage } = storeToRefs(quizStore)
-const selectedLanguage = ref(currentLanguage)
 const { completed } = storeToRefs(quizStore)
+
+const selectedLanguage = ref(currentLanguage)
+
+const { t } = useI18n()
 
 function updateLanguage () {
   quizStore.setLanguage(selectedLanguage.value)
@@ -17,12 +21,12 @@ function updateLanguage () {
 
 <template>
   <div>
-    <div v-if="!completed" class="mb-2">
+    <div class="mb-2">
       <select v-model="selectedLanguage" @change="updateLanguage">
-        <option value="en">English</option>
-        <option value="de">German</option>
-        <option value="pt">Portuguese</option>
-        <option value="sv">Swedish</option>
+        <option value="en">{{ t('en') }}</option>
+        <option value="de">{{ t('de') }}</option>
+        <option value="pt">{{ t('pt') }}</option>
+        <option value="sv">{{ t('sv') }}</option>
       </select>
     </div>
 

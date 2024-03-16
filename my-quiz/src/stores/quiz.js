@@ -29,23 +29,28 @@ export const useQuizStore = defineStore('quiz', () => {
   const percentile = computed(() => {
     const { percentile } = quizResponse.value
 
-    if (percentile == null) return t('result.score_invalid')
-    if (percentile === 999) return t('result.score_insufficient')
-    return t('result.score_ranked', {
+    if (percentile == null) return t('result.percentile_invalid')
+    if (percentile === 999) return t('result.percentile_insufficient')
+    return t('result.percentile_ranked', {
       percentile: percentile != null ? percentile : 0
+    })
+  })
+
+  const score = computed(() => {
+    return t('result.score', {
+      correct: correctAnswers.value,
+      total: questions.value.length
     })
   })
 
   const username = computed(() => {
     const { username } = surveyResults.value
-    console.log('survey results', surveyResults.value, username)
 
     return username != null ? username : 'Anonymous'
   })
 
   watch(() => currentLanguage.value, (language) => {
     if (survey.value != null) {
-      console.log('Language changed to', language)
       survey.value.locale = language
       locale.value = language
     }
@@ -84,6 +89,7 @@ export const useQuizStore = defineStore('quiz', () => {
     reset,
     surveyResults,
     resultCount,
+    score,
     survey,
     username,
     setQuestions,

@@ -12,6 +12,7 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import 'survey-core/defaultV2.min.css'
 import { Model } from 'survey-core'
 import { ContrastDarkPanelless } from 'survey-core/themes/contrast-dark-panelless'
@@ -26,11 +27,11 @@ const survey = ref(null)
 const quizStore = useQuizStore()
 
 const { data, error, execute, isLoading }= useFetch()
+const { t } = useI18n()
 
 watch(survey, (newValue) => {
   if (newValue) {
     newValue.onComplete.add((result) => {
-      console.log('result:', result.data);
       const res = {}
       res.username = result.data.username
       res.answers = {}
@@ -50,19 +51,18 @@ watch(survey, (newValue) => {
 }, { immediate: true })
 
 function convertQuestionsToSurveyJSFormat (questions) {
-  console.log('questions:', questions)
   return {
     title: 'General Knowledge Quiz',
     showProgressBar: 'bottom',
     showTimerPanel: "top",
     maxTimeToFinishPage: 10,
     firstPageIsStarted: true,
-    startSurveyText: "Start Quiz",
+    startSurveyText: t('start'),
     pages: [
       {
         elements: [{
           type: 'html',
-          html: 'You are about to start a quiz on General Knowledge. <br>You will have 10 seconds for every question.<br>Enter your name below and click <b>Start Quiz</b> to begin.'
+          html: t('quiz.starter_page')
         }, {
           type: 'text',
           name: 'username',
@@ -91,7 +91,6 @@ onMounted(async () => {
     { method: 'GET', headers: { 'Content-Type': 'application/json' } }
   )
   quizStore.setQuestions(data.value)
-  console.log('questions:', data)
 
   const surveyJson = convertQuestionsToSurveyJSFormat(data.value)
   survey.value = new Model(surveyJson)
