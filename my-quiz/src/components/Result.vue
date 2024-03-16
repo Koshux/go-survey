@@ -4,6 +4,7 @@
     <p v-if="isLoading">Loading...</p>
     <p v-else-if="error">{{ error }}</p>
     <div v-else>
+      <p>{{ performanceCategory }}</p>
       <p>{{ score }}</p>
       <p>{{ percentile }}</p>
       <button @click="reset">{{ t('result.reset') }}</button>
@@ -22,6 +23,7 @@ const quizStore = useQuizStore()
 const { t } = useI18n()
 const { data: answers, error, execute, isLoading }= useFetch()
 const {
+  performanceCategory,
   percentile,
   score,
   surveyResults,

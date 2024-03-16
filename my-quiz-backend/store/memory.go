@@ -181,7 +181,7 @@ func PerformanceCategory(score int) string {
 	case mediumMembership:
 		return "Average to Good"
 	case lowMembership:
-		return "Needs Improvement to Average"
+		return "Poor to Average"
 	default:
 		return "Unknown"
 	}

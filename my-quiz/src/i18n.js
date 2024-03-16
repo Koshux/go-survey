@@ -15,6 +15,8 @@ const messages = {
       starter_page: 'You are about to start a quiz on General Knowledge. <br>You will have 10 seconds for every question.<br>Enter your name below and click <b>Start Quiz</b> to begin.',
     },
     result: {
+      category: 'Your performance was {category}!',
+      category_invalid: 'Your performance category is invalid.',
       title: 'Thank you, {username}!',
       reset: 'Try again',
       score: 'You got {correct} out of {total} questions right!',
@@ -38,6 +40,8 @@ const messages = {
       starter_page: 'Du bist dabei, ein Quiz über Allgemeinwissen zu starten. <br>Du hast 10 Sekunden für jede Frage.<br>Gib deinen Namen unten ein und klicke auf <b>Quiz starten</b>, um zu beginnen.',
     },
     result: {
+      category: 'Deine Leistung war {category}!',
+      category_invalid: 'Deine Leistungskategorie ist ungültig.',
       title: 'Danke, {username}!',
       reset: 'Nochmal versuchen',
       score: 'Du hast {correct} von {total} Fragen richtig beantwortet!',
@@ -61,6 +65,8 @@ const messages = {
       starter_page: 'Você está prestes a começar um quiz sobre conhecimentos gerais. <br>Você terá 10 segundos para cada pergunta.<br>Insira seu nome abaixo e clique em <b>Começar Quiz</b> para começar.',
     },
     result: {
+      category: 'Sua performance foi {category}!',
+      category_invalid: 'Sua categoria de performance é inválida.',
       title: 'Obrigado, {username}!',
       reset: 'Tentar novamente',
       score: 'Você acertou {correct} de {total} perguntas!',
@@ -84,6 +90,8 @@ const messages = {
       starter_page: 'Du är på väg att starta ett quiz om Allmänbildning. <br>Du har 10 sekunder på dig för varje fråga.<br>Ange ditt namn nedan och klicka på <b>Starta Quiz</b> för att börja.',
     },
     result: {
+      category: 'Din prestation var {category}!',
+      category_invalid: 'Din prestandakategori är ogiltig.',
       title: 'Tack, {username}!',
       reset: 'Försök igen',
       score: 'Du fick {correct} av {total} frågor rätt!',

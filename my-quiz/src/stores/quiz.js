@@ -36,6 +36,13 @@ export const useQuizStore = defineStore('quiz', () => {
     })
   })
 
+  const performanceCategory = computed(() => {
+    const { category } = quizResponse.value
+
+    if (category == null) return t('result.category_invalid')
+    return t('result.category', { category })
+  })
+
   const score = computed(() => {
     return t('result.score', {
       correct: correctAnswers.value,
@@ -85,6 +92,7 @@ export const useQuizStore = defineStore('quiz', () => {
     correctAnswers,
     currentLanguage,
     percentile,
+    performanceCategory,
     questions,
     reset,
     surveyResults,
